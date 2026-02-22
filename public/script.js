@@ -7,13 +7,50 @@ const memUsedEl = document.getElementById('mem-used');
 const memTotalEl = document.getElementById('mem-total');
 const memBar = document.getElementById('mem-bar');
 
+const ctx = document.getElementById('historyChart').getContext('2d');
+const historyData = new Array(60).fill(0);
+const historyLabels = new Array(60).fill('');
+
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: historyLabels,
+        datasets: [{
+            label: 'CPU Load (%)',
+            data: historyData,
+            borderColor: '#00ffcc',
+            backgroundColor: 'rgba(0, 255, 204, 0.2)',
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        animation: false,
+        scales: {
+            y: {
+                min: 0,
+                max: 100,
+                grid: { color: '#333' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { display: false }
+            }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
 socket.on('stats', (data) => {
-    // OS updates
     if (osEl.innerText === 'Loading...') {
         osEl.innerText = data.os;
     }
 
-    // CPU updates
     cpuEl.innerText = data.cpu;
     cpuBar.style.width = data.cpu + '%';
     
@@ -23,7 +60,6 @@ socket.on('stats', (data) => {
         cpuBar.style.backgroundColor = 'var(--primary-color)';
     }
 
-    // Memory updates
     memUsedEl.innerText = data.memUsed;
     memTotalEl.innerText = data.memTotal;
     
@@ -35,4 +71,8 @@ socket.on('stats', (data) => {
     } else {
         memBar.style.backgroundColor = 'var(--primary-color)';
     }
+
+    chart.data.datasets[0].data.shift();
+    chart.data.datasets[0].data.push(data.cpu);
+    chart.update();
 });

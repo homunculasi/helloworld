@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>System Monitor Dashboard</h1>
+        
+        <div class="card">
+            <h2>OS Information</h2>
+            <p id="os" class="stat-value">Loading...</p>
+        </div>
+
+        <div class="card">
+            <h2>CPU Load</h2>
+            <p><span id="cpu" class="stat-value">0</span>%</p>
+            <div class="bar-container">
+                <div class="bar" id="cpu-bar"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Memory Usage</h2>
+            <p><span id="mem-used" class="stat-value">0</span> GB / <span id="mem-total">0</span> GB</p>
+            <div class="bar-container">
+                <div class="bar" id="mem-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

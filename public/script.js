@@ -6,6 +6,7 @@ const cpuBar = document.getElementById('cpu-bar');
 const memUsedEl = document.getElementById('mem-used');
 const memTotalEl = document.getElementById('mem-total');
 const memBar = document.getElementById('mem-bar');
+const processListEl = document.getElementById('process-list');
 
 const ctx = document.getElementById('historyChart').getContext('2d');
 const historyData = new Array(60).fill(0);
@@ -75,4 +76,13 @@ socket.on('stats', (data) => {
     chart.data.datasets[0].data.shift();
     chart.data.datasets[0].data.push(data.cpu);
     chart.update();
+
+    if (data.processes && data.processes.length > 0) {
+        processListEl.innerHTML = data.processes.map(p => 
+            `<li>
+                <span class="process-name">${p.name}</span>
+                <span class="process-stats">CPU: ${p.cpu}% | RAM: ${p.mem}%</span>
+            </li>`
+        ).join('');
+    }
 });
